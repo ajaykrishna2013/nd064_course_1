@@ -8,7 +8,7 @@ metadata:
   namespace: {{ .Values.namespace.name }}
 spec:
   ports:
-  - port: {{ .Values.serivce.port }}
+  - port: {{ .Values.service.port }}
     protocol: {{ .Values.service.protocol }}
     targetPort: {{ .Values.service.targetPort }}
   selector:
