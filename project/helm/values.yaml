@@ -1,0 +1,34 @@
+namespace:
+  name: sandbox
+ 
+image:
+  repository: ajkris/techtrends 
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  port: 4111
+  targetPort: 7111
+  protocol: TCP
+  type: ClusterIP
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  limits:
+    memory: "128Mi"
+    cpu: "500m"
+
+ports:
+  containerPort: 7111
+
+livenessProbe:
+  path: /healthz
+  port: 7111
+
+readinessProbe:
+  path: /healthz
+  port: 7111
