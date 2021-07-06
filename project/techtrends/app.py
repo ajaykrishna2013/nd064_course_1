@@ -34,9 +34,10 @@ def get_pos_count():
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 logging.getLogger('werkzeug').setLevel(logging.DEBUG)
-app.logger.setLevel(logging.DEBUG)
 handler1 = logging.StreamHandler(sys.stdout)
+handler1.setLevel(logging.DEBUG)
 handler2 = logging.StreamHandler(sys.stderr)
+handler2.setLevel(logging.ERROR)
 app.logger.addHandler(handler1)
 app.logger.addHandler(handler2)
 connection_count = 0
