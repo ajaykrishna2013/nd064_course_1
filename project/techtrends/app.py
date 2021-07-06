@@ -4,6 +4,7 @@ from flask import Flask, jsonify, json, render_template, request, url_for, redir
 from werkzeug.exceptions import abort
 import logging
 import sys
+import os
 
 
 # Function to get a database connection.
@@ -33,13 +34,6 @@ def get_pos_count():
 # Define the Flask application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
-logging.getLogger('werkzeug').setLevel(logging.DEBUG)
-handler1 = logging.StreamHandler(sys.stdout)
-handler1.setLevel(logging.DEBUG)
-handler2 = logging.StreamHandler(sys.stderr)
-handler2.setLevel(logging.ERROR)
-app.logger.addHandler(handler1)
-app.logger.addHandler(handler2)
 connection_count = 0
 
 # Define the main route of the web application 
@@ -59,7 +53,7 @@ def post(post_id):
         app.logger.error("Post {} does not exist".format(post_id))
         return render_template('404.html'), 404
     else:
-        app.logger.info("Article {} retrieved!".format(post['title']))
+        app.logger.debug("Article {} retrieved!".format(post['title']))
         return render_template('post.html', post=post)
 
 # Define the About Us page
@@ -104,6 +98,30 @@ def metrics():
 
 
 
+def init_logger():
+  log_level = os.getenv("LOGLEVEL", "DEBUG").upper()
+  log_level = (
+      getattr(logging, log_level)
+      if log_level in ["CRITICAL", "DEBUG", "ERROR", "INFO", "WARNING",]
+      else logging.DEBUG
+  )
+
+  stdout_handler = logging.StreamHandler(sys.stdout)
+  stdout_handler.setLevel(log_level)
+
+  stderr_handler = logging.StreamHandler(sys.stderr)
+  stderr_handler.setLevel(logging.ERROR)
+
+  handlers = [stderr_handler, stdout_handler]
+  logging.basicConfig(
+      format='%(levelname)s:%(name)s:%(asctime)s, %(message)s',
+      handlers=handlers,
+      level=log_level
+  )
+
+
+
 # start the application on port 7111
 if __name__ == "__main__":
+   init_logger()
    app.run(host='0.0.0.0', port='7111')
