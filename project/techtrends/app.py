@@ -3,6 +3,7 @@ import sqlite3
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
 import logging
+import sys
 
 
 # Function to get a database connection.
@@ -34,6 +35,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 logging.getLogger('werkzeug').setLevel(logging.DEBUG)
 app.logger.setLevel(logging.DEBUG)
+handler1 = logging.StreamHandler(sys.stdout)
+handler2 = logging.StreamHandler(sys.stderr)
+app.logger.addHandler(handler1)
+app.logger.addHandler(handler2)
 connection_count = 0
 
 # Define the main route of the web application 
